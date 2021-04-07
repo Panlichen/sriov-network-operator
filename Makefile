@@ -190,8 +190,11 @@ bundle-build:
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
 
 deploy-setup: skopeo install
+	echo ${repo_dir}
+	echo $(origin repo_dir)
 	hack/deploy-setup.sh $(NAMESPACE)
 
+deploy-setup-k8s: export HAHA=HAHH
 deploy-setup-k8s: export NAMESPACE=sriov-network-operator
 deploy-setup-k8s: export ENABLE_ADMISSION_CONTROLLER=false
 deploy-setup-k8s: export CNI_BIN_PATH=/opt/cni/bin

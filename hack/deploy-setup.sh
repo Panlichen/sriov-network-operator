@@ -4,13 +4,18 @@
 # user who has the cluster-admin role
 
 # set -euxo pipefail
-
+echo in deploy-setup.sh, before source "$(dirname $0)/common", repo_dir is $repo_dir
+echo in deploy-setup.sh, \$0 is $0
 source "$(dirname $0)/common"
+echo in deploy-setup.sh, after source "$(dirname $0)/common", repo_dir is $repo_dir
+
+echo HAHA is $HAHA
 
 load_manifest() {
   local repo=$1
   local namespace=${2:-}
   export NAMESPACE=${namespace}
+  echo $repo $namespace
   if [ -n "${namespace}" ] ; then
     namespace="-n ${namespace}"
   fi
@@ -35,4 +40,5 @@ rm -rf /tmp/_working_dir
 mkdir /tmp/_working_dir
 source hack/env.sh
 
+echo ${repo_dir} $1
 load_manifest ${repo_dir} $1
