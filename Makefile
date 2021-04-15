@@ -51,6 +51,9 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+look_env:
+	@echo $(GOBIN)
+
 .PHONY: all build clean gendeepcopy test test-e2e test-e2e-k8s run image fmt sync-manifests test-e2e-conformance manifests update-codegen
 
 all: generate vet build plugins
@@ -90,7 +93,10 @@ run: vet skopeo install
 
 # Install CRDs into a cluster
 install: manifests kustomize
+	@echo ============================ install ============================
+	@echo "$(KUSTOMIZE) build config/crd | kubectl apply -f -"
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
+	@echo ============================ install ============================
 
 # Uninstall CRDs from a cluster
 uninstall: manifests kustomize
@@ -107,7 +113,10 @@ uninstall: manifests kustomize
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests: controller-gen
+	@echo $(CONTROLLER_GEN) $(CRD_OPTIONS) webhook paths="./..." output:crd:artifacts:config=$(CRD_BASES)
+	@echo ============================ manifests ============================
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) webhook paths="./..." output:crd:artifacts:config=$(CRD_BASES)
+	@echo ============================ manifests ============================
 
 
 sync-manifests-%: manifests
@@ -149,11 +158,18 @@ ifeq (, $(shell which controller-gen))
 	set -e ;\
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$CONTROLLER_GEN_TMP_DIR ;\
+	# echo $$CONTROLLER_GEN_TMP_DIR ;\
 	go mod init tmp ;\
 	GOFLAGS="" go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.3.0 ;\
 	rm -rf $$CONTROLLER_GEN_TMP_DIR ;\
+	echo GOPATH $$GOPATH ;\
+	echo $(shell go env GOPATH) ;\
+	echo GOBIN $$GOBIN ;\
+	echo $$GOBIN/controller-gen ;\
+	echo =================== ;\
 	}
 CONTROLLER_GEN=$(GOBIN)/controller-gen
+# CONTROLLER_GEN=$(shell go env GOPATH)/bin/controller-gen
 else
 CONTROLLER_GEN=$(shell which controller-gen)
 endif
