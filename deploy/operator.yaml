@@ -22,7 +22,7 @@ spec:
       containers:
         - name: sriov-network-operator
           # Replace this with the built image name
-          image: $Fv
+          image: $SRIOV_NETWORK_OPERATOR_IMAGE
           command:
           - sriov-network-operator
           imagePullPolicy: IfNotPresent
