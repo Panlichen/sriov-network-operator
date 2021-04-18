@@ -209,9 +209,9 @@ deploy-setup: skopeo install
 	echo ${repo_dir}
 	echo $(origin repo_dir)
 	hack/deploy-setup.sh $(NAMESPACE)
-
+# NAMESPACE: sriov-network-operator
 deploy-setup-k8s: export HAHA=HAHH
-deploy-setup-k8s: export NAMESPACE=sriov-network-operator
+deploy-setup-k8s: export NAMESPACE=default
 deploy-setup-k8s: export ENABLE_ADMISSION_CONTROLLER=false
 deploy-setup-k8s: export CNI_BIN_PATH=/opt/cni/bin
 deploy-setup-k8s: export OPERATOR_EXEC=kubectl
@@ -239,7 +239,7 @@ test-%: generate vet manifests
 undeploy: uninstall
 	@hack/undeploy.sh $(NAMESPACE)
 
-undeploy-k8s: export NAMESPACE=sriov-network-operator
+undeploy-k8s: export NAMESPACE=default
 undeploy-k8s: export OPERATOR_EXEC=kubectl
 undeploy-k8s: undeploy
 
